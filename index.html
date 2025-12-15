@@ -1,0 +1,3986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>TRPG线索管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 默认主题 - 深海静思 */
+        :root {
+            --primary-color: #2d4059;
+            --secondary-color: #33475b;
+            --accent-color: #5dc0a6;
+            --success-color: #459c87;
+            --dark-bg: #1f2d3d;
+            --medium-bg: #2d4059;
+            --light-bg: #33475b;
+            --text-color: #f0f4f8;
+            --text-muted: #8ba8c5;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --mobile-breakpoint: 768px;
+            --timeline-color: #87d4c2;
+        }
+        
+        /* 主题1 - 静奢之夜 */
+        .theme-night {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #d4af37;
+            --success-color: #8fa5c2;
+            --dark-bg: #1a252f;
+            --medium-bg: #2c3e50;
+            --light-bg: #34495e;
+            --text-color: #f5f7fa;
+            --text-muted: #5d7a9c;
+            --timeline-color: #e6c875;
+        }
+        
+        /* 主题2 - 禅意花园 */
+        .theme-garden {
+            --primary-color: #4a7863;
+            --secondary-color: #385c4c;
+            --accent-color: #b76e4a;
+            --success-color: #a8b8a8;
+            --dark-bg: #3c3c3c;
+            --medium-bg: #4a7863;
+            --light-bg: #385c4c;
+            --text-color: #f8f5f1;
+            --text-muted: #8a9b8c;
+            --timeline-color: #d49a7c;
+        }
+        
+        /* 主题3 - 现代都市 */
+        .theme-modern {
+            --primary-color: #4a4a4a;
+            --secondary-color: #323232;
+            --accent-color: #b56576;
+            --success-color: #9e9e9e;
+            --dark-bg: #2d2d2d;
+            --medium-bg: #4a4a4a;
+            --light-bg: #323232;
+            --text-color: #f0f0f0;
+            --text-muted: #7a7a7a;
+            --timeline-color: #d18d9a;
+        }
+        
+        /* 主题4 - 沙漠暮光 */
+        .theme-desert {
+            --primary-color: #9c715c;
+            --secondary-color: #7d5948;
+            --accent-color: #7a9eb1;
+            --success-color: #d8c4ae;
+            --dark-bg: #5c4033;
+            --medium-bg: #9c715c;
+            --light-bg: #7d5948;
+            --text-color: #f9f6f2;
+            --text-muted: #c4a78c;
+            --timeline-color: #a0b9c7;
+        }
+        
+        /* 主题5 - 深海静思 (默认) */
+        .theme-deepsea {
+            --primary-color: #2d4059;
+            --secondary-color: #33475b;
+            --accent-color: #5dc0a6;
+            --success-color: #459c87;
+            --dark-bg: #1f2d3d;
+            --medium-bg: #2d4059;
+            --light-bg: #33475b;
+            --text-color: #f0f4f8;
+            --text-muted: #8ba8c5;
+            --timeline-color: #87d4c2;
+        }
+        
+        /* 主题6 - 暮色紫韵 */
+        .theme-twilight {
+            --primary-color: #4a3b5a;
+            --secondary-color: #362a43;
+            --accent-color: #c97b8d;
+            --success-color: #9d91ab;
+            --dark-bg: #3d3149;
+            --medium-bg: #4a3b5a;
+            --light-bg: #362a43;
+            --text-color: #f5f3f7;
+            --text-muted: #7b6b8c;
+            --timeline-color: #e0a0af;
+        }
+        
+        /* 主题7 - 晨雾森林 */
+        .theme-forest {
+            --primary-color: #3c6256;
+            --secondary-color: #2a4539;
+            --accent-color: #d9a566;
+            --success-color: #8da698;
+            --dark-bg: #314c42;
+            --medium-bg: #3c6256;
+            --light-bg: #2a4539;
+            --text-color: #f2f7f5;
+            --text-muted: #6d8a7c;
+            --timeline-color: #e6c18f;
+        }
+        
+        /* 主题8 - 极简主义 */
+        .theme-minimal {
+            --primary-color: #3a506b;
+            --secondary-color: #2a3c52;
+            --accent-color: #6cd4c5;
+            --success-color: #7e9cbc;
+            --dark-bg: #2c3e50;
+            --medium-bg: #3a506b;
+            --light-bg: #2a3c52;
+            --text-color: #f8fafc;
+            --text-muted: #5c7c9c;
+            --timeline-color: #9ce3d9;
+        }
+        
+        /* 主题9 - 暖日咖啡 */
+        .theme-coffee {
+            --primary-color: #6d4c41;
+            --secondary-color: #54382f;
+            --accent-color: #8d6e63;
+            --success-color: #c5a99c;
+            --dark-bg: #4e342e;
+            --medium-bg: #6d4c41;
+            --light-bg: #54382f;
+            --text-color: #fbf7f3;
+            --text-muted: #a1887f;
+            --timeline-color: #b8a095;
+        }
+        
+        /* 主题10 - 暮光之城 */
+        .theme-dusk {
+            --primary-color: #455a64;
+            --secondary-color: #344955;
+            --accent-color: #ff8a65;
+            --success-color: #9cb0bb;
+            --dark-bg: #37474f;
+            --medium-bg: #455a64;
+            --light-bg: #344955;
+            --text-color: #f5f7fa;
+            --text-muted: #78909c;
+            --timeline-color: #ffab91;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* 应用容器 */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* 顶部导航栏 */
+        .app-header {
+            background-color: var(--medium-bg);
+            padding: 15px 20px;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .logo i {
+            color: var(--accent-color);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 侧边栏 - PC端显示，移动端隐藏 */
+        .sidebar {
+            width: 300px;
+            background-color: var(--medium-bg);
+            border-right: 1px solid var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            z-index: 99;
+        }
+        
+        /* 移动端侧边栏样式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 85%;
+                max-width: 320px;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+                z-index: 200;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 150;
+            }
+            
+            .overlay.open {
+                display: block;
+            }
+        }
+        
+        /* 侧边栏内容 */
+        .sidebar-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid var(--light-bg);
+            border-radius: 8px;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .filter-section {
+            background-color: var(--dark-bg);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .tag:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .tag.active {
+            background-color: var(--accent-color);
+        }
+        
+        /* 线索列表 */
+        .clue-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .clue-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .clue-item {
+            background-color: var(--dark-bg);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clue-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(3px);
+        }
+        
+        .clue-item.active {
+            border-left-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .clue-title {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .clue-preview {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .clue-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .clue-time-display {
+            color: var(--timeline-color);
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        
+        .clue-time-display i {
+            margin-right: 3px;
+        }
+        
+        /* 编辑器区域 */
+        .editor-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--dark-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-container {
+                padding: 15px;
+            }
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-bg);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .editor-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #e01e75;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--light-bg);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--light-bg);
+        }
+        
+        /* 标签区域 */
+        .clue-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .clue-tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .clue-tag .remove-tag {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* 编辑器工具栏 - 增强 */
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+        }
+        
+        .toolbar-btn {
+            background-color: var(--medium-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .toolbar-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* 颜色选择器 - 简化版 */
+        .color-picker-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .color-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--medium-bg);
+            border: 1px solid var(--light-bg);
+            border-radius: 6px;
+            padding: 10px;
+            display: none;
+            z-index: 100;
+            width: 150px; /* 缩短长度 */
+            box-shadow: var(--card-shadow);
+        }
+        
+        .color-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .color-input-container input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--light-bg);
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            font-size: 14px;
+            width: 90px; /* 进一步缩短输入框长度 */
+        }
+        
+        .color-input-container button {
+            padding: 8px 10px; /* 缩短按钮宽度 */
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 13px; /* 缩小字体 */
+        }
+        
+        /* 编辑器 */
+        .editor-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .editor {
+            min-height: 300px;
+            padding: 20px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            outline: none;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            transition: border-color 0.3s;
+        }
+        
+        .editor:focus {
+            border-color: var(--primary-color);
+        }
+        
+        .editor-placeholder {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--text-muted);
+            pointer-events: none;
+            display: none;
+        }
+        
+        .editor:empty + .editor-placeholder {
+            display: block;
+        }
+        
+        /* 文本样式 */
+        .text-underline {
+            text-decoration: underline;
+        }
+        
+        .text-strikethrough {
+            text-decoration: line-through;
+        }
+        
+        /* 黑幕效果 - 修复版本 */
+        .heimu {
+            background-color: #000;
+            color: #000;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: inline;
+            padding: 0 2px;
+            border-radius: 2px;
+            line-height: inherit;
+        }
+        
+        .heimu:hover, .heimu.revealed {
+            background-color: transparent;
+            color: inherit;
+        }
+        
+        /* 超链接样式 */
+        .clue-link {
+            color: var(--accent-color);
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0 2px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+            background-color: transparent;
+        }
+        
+        .clue-link:hover {
+            background-color: rgba(93, 192, 166, 0.2);
+        }
+        
+        /* 图片样式 */
+        .clue-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid var(--light-bg);
+            cursor: pointer;
+        }
+        
+        .image-placeholder {
+            display: inline-block;
+            background-color: var(--medium-bg);
+            color: var(--text-muted);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-style: italic;
+            margin: 10px 0;
+        }
+        
+        /* 相关线索区域 */
+        .related-clues {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .related-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .related-item {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .related-item:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: var(--medium-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--light-bg);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-bg);
+        }
+        
+        .modal-title {
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-bg);
+            border-radius: 8px;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* 移动端底部工具栏 */
+        .mobile-bottom-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--medium-bg);
+            padding: 12px 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 99;
+            justify-content: space-around;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-bottom-bar {
+                display: flex;
+            }
+            
+            .editor-container {
+                padding-bottom: 70px; /* 为底部工具栏留出空间 */
+            }
+        }
+        
+        .mobile-tool {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .mobile-tool i {
+            font-size: 1.2rem;
+        }
+        
+        /* 通知 */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.error {
+            background-color: var(--accent-color);
+        }
+        
+        /* 导出/导入样式 */
+        .export-import {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--light-bg);
+        }
+        
+        /* 侧边栏工具按钮 */
+        .sidebar-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .sidebar-tool-btn {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-tool-btn:hover {
+            background-color: var(--light-bg);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-tool-btn i {
+            color: var(--accent-color);
+        }
+        
+        /* 主题选择器 */
+        .theme-selector-modal {
+            display: none;
+        }
+        
+        .theme-options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .theme-option-btn {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .theme-option-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .theme-option-btn.active {
+            border-color: var(--accent-color);
+        }
+        
+        .theme-preview {
+            height: 20px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .theme-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* 时间线主容器 */
+        .timeline-main-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-bg);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-bg);
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        /* 时间线选项卡 */
+        .timeline-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background-color: var(--light-bg);
+            padding: 5px;
+            border-radius: 8px;
+        }
+        
+        .timeline-tab {
+            flex: 1;
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .timeline-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* 时间线方案选择 */
+        .timeline-scheme-section {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-scheme-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-scheme-select {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* 时间线编辑和浏览共用容器 */
+        .timeline-content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* 时间线编辑模式 */
+        .timeline-edit-mode {
+            display: none;
+        }
+        
+        .timeline-edit-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        
+        .timeline-clue-select-container {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* 时间线线索选择下拉框 */
+        .timeline-clue-select {
+            width: 100%;
+        }
+        
+        /* 时间线线性视图容器 */
+        .timeline-linear-container {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+            min-height: 300px;
+            padding: 40px 0;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--primary-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-items-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .timeline-item-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .timeline-item {
+            position: relative;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 15px;
+            width: 350px;
+            max-width: 45%;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        
+        .timeline-item.left {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        
+        .timeline-item.right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--dark-bg);
+        }
+        
+        .timeline-item.left::before {
+            right: -30px;
+        }
+        
+        .timeline-item.right::before {
+            left: -30px;
+        }
+        
+        .timeline-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-item-title {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .timeline-item-order {
+            background-color: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .timeline-item-preview {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* 修改：时间输入框 - 使用图标并限制长度 */
+        .timeline-item-time-edit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .timeline-item-time-edit i {
+            color: var(--timeline-color);
+        }
+        
+        .timeline-item-time-edit input {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: var(--dark-bg);
+            border: 1px solid var(--light-bg);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-size: 14px;
+            max-width: calc(100% - 30px); /* 防止超出容器 */
+            box-sizing: border-box;
+        }
+        
+        /* 修改：时间线控制按钮 - 只显示图标 */
+        .timeline-item-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        
+        .timeline-edit-btn {
+            padding: 6px 10px;
+            background-color: var(--medium-bg);
+            border: 1px solid var(--light-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .timeline-edit-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* 时间线浏览模式 */
+        .timeline-view-mode {
+            display: none;
+        }
+        
+        .timeline-view-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        /* 紧凑浏览模式 */
+        .timeline-compact-view {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .timeline-compact-item {
+            background-color: var(--dark-bg);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s;
+        }
+        
+        .timeline-compact-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(3px);
+        }
+        
+        .timeline-compact-order {
+            background-color: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-compact-time {
+            color: var(--timeline-color);
+            font-weight: 600;
+            width: 100px;
+            flex-shrink: 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .timeline-compact-title {
+            flex: 1;
+            color: var(--text-color);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* 时间线方案列表 */
+        .timeline-scheme-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .timeline-scheme-item {
+            background-color: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .timeline-scheme-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .timeline-scheme-item.active {
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .timeline-scheme-info {
+            flex: 1;
+        }
+        
+        .timeline-scheme-name {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .timeline-scheme-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .timeline-scheme-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* 关联按钮 */
+        .associate-btn {
+            margin-left: auto;
+        }
+        
+        /* 列表样式修正 - 移除缩进 */
+        .editor ul, .editor ol {
+            margin-left: 0;
+            padding-left: 20px;
+            list-style-position: outside;
+        }
+        
+        .editor li {
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        /* 时间线线索选择多选模式 */
+        .timeline-clue-multiselect {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: var(--dark-bg);
+            border: 1px solid var(--light-bg);
+            border-radius: 6px;
+            padding: 8px;
+        }
+        
+        .clue-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .clue-checkbox-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .clue-checkbox-item input {
+            margin-right: 8px;
+        }
+        
+        /* 快速添加按钮 */
+        .quick-add-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .quick-add-btn {
+            padding: 8px 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .quick-add-btn:hover {
+            background-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="app-header">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="logo">
+                <i class="fas fa-dice-d20"></i>
+                <span>TRPG线索系统</span>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-outline btn-sm" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    <span class="desktop-only">导出</span>
+                </button>
+                <button class="btn btn-outline btn-sm" id="importBtn">
+                    <i class="fas fa-upload"></i>
+                    <span class="desktop-only">导入</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 侧边栏 -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <!-- 搜索框 -->
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="搜索线索...">
+                    </div>
+                    
+                    <!-- 筛选区域 -->
+                    <div class="filter-section">
+                        <div class="section-title">
+                            <i class="fas fa-filter"></i>
+                            <span>筛选标签</span>
+                        </div>
+                        <div class="tag-list" id="tagFilter">
+                            <!-- 标签会通过JS动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 线索列表 -->
+                    <div class="clue-list-section">
+                        <div class="clue-list-header">
+                            <div class="section-title">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>线索列表</span>
+                            </div>
+                            <button class="btn btn-success btn-sm" id="newClueBtn">
+                                <i class="fas fa-plus"></i>
+                                <span>新建</span>
+                            </button>
+                        </div>
+                        
+                        <div class="clue-list" id="clueList">
+                            <!-- 线索列表会通过JS动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 侧边栏工具按钮 -->
+                    <div class="sidebar-tools">
+                        <button class="sidebar-tool-btn" id="timelineBtn">
+                            <i class="fas fa-history"></i>
+                            <span>时间线编排</span>
+                        </button>
+                        <button class="sidebar-tool-btn" id="clearDataBtn">
+                            <i class="fas fa-trash"></i>
+                            <span>清空数据</span>
+                        </button>
+                        <button class="sidebar-tool-btn" id="themeSelectorBtn">
+                            <i class="fas fa-palette"></i>
+                            <span>更换主题</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- 移动端遮罩层 -->
+            <div class="overlay" id="overlay"></div>
+            
+            <!-- 编辑器区域 -->
+            <main class="editor-container">
+                <div class="editor-header">
+                    <div class="editor-title" id="currentClueTitle">选择或创建线索</div>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" id="saveClueBtn">
+                            <i class="fas fa-save"></i>
+                            <span class="desktop-only">保存</span>
+                        </button>
+                        <button class="btn btn-danger" id="deleteClueBtn">
+                            <i class="fas fa-trash"></i>
+                            <span class="desktop-only">删除</span>
+                        </button>
+                        <button class="btn btn-success associate-btn" id="associateClueBtn">
+                            <i class="fas fa-link"></i>
+                            <span class="desktop-only">关联</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 标签显示区域 -->
+                <div class="clue-tags" id="clueTags">
+                    <!-- 当前线索的标签 -->
+                </div>
+                
+                <!-- 编辑器工具栏 -->
+                <div class="editor-toolbar">
+                    <button class="toolbar-btn" id="boldBtn" title="粗体">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="toolbar-btn" id="italicBtn" title="斜体">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="toolbar-btn" id="underlineBtn" title="下划线">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <button class="toolbar-btn" id="strikethroughBtn" title="删除线">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                    
+                    <div class="color-picker-container">
+                        <button class="toolbar-btn" id="colorBtn" title="字体颜色">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <div class="color-options" id="colorOptions">
+                            <div class="color-input-container">
+                                <input type="text" id="customColorInput" placeholder="#000000">
+                                <button id="applyCustomColorBtn">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="toolbar-btn" id="listBulletBtn" title="无序列表">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="toolbar-btn" id="listNumberBtn" title="有序列表">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                    
+                    <button class="toolbar-btn" id="heimuBtn" title="黑幕">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                    
+                    <button class="toolbar-btn" id="addLinkBtn" title="添加链接">
+                        <i class="fas fa-link"></i>
+                        <span class="desktop-only">链接</span>
+                    </button>
+                    
+                    <button class="toolbar-btn" id="addImageBtn" title="添加图片">
+                        <i class="fas fa-image"></i>
+                        <span class="desktop-only">图片</span>
+                    </button>
+                    
+                    <button class="toolbar-btn" id="addTagBtn" title="添加标签">
+                        <i class="fas fa-tag"></i>
+                        <span class="desktop-only">标签</span>
+                    </button>
+                </div>
+                
+                <!-- 编辑器 -->
+                <div class="editor-wrapper">
+                    <div 
+                        class="editor" 
+                        id="clueEditor" 
+                        contenteditable="true"
+                    ></div>
+                    <div class="editor-placeholder">在此输入线索内容...可以输入链接格式如：[[线索名称]] 或使用工具栏功能</div>
+                </div>
+                
+                <!-- 相关线索区域 -->
+                <div class="related-clues">
+                    <div class="section-title">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>相关线索</span>
+                    </div>
+                    <div class="related-list" id="relatedClues">
+                        <!-- 相关线索会通过JS动态生成 -->
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- 移动端底部工具栏 -->
+        <div class="mobile-bottom-bar">
+            <button class="mobile-tool" id="mobileSidebarBtn">
+                <i class="fas fa-list"></i>
+                <span>线索列表</span>
+            </button>
+            <button class="mobile-tool" id="mobileNewClueBtn">
+                <i class="fas fa-plus"></i>
+                <span>新建线索</span>
+            </button>
+            <button class="mobile-tool" id="mobileSaveBtn">
+                <i class="fas fa-save"></i>
+                <span>保存</span>
+            </button>
+            <button class="mobile-tool" id="mobileLinkBtn">
+                <i class="fas fa-link"></i>
+                                <span>链接</span>
+            </button>
+        </div>
+        
+        <!-- 通知 -->
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notificationText">操作成功</span>
+        </div>
+    </div>
+    
+    <!-- 新建线索模态框 -->
+    <div class="modal" id="newClueModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">新建线索</div>
+                <button class="close-modal" id="closeNewClueModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="clueName">线索名称</label>
+                <input type="text" id="clueName" class="form-control" placeholder="请输入线索名称">
+            </div>
+            <div class="form-group">
+                <label for="clueTagsInput">标签（用逗号分隔）</label>
+                <input type="text" id="clueTagsInput" class="form-control" placeholder="例如: 地点, NPC, 物品 - 按回车或逗号添加">
+            </div>
+            <button class="btn btn-primary" id="createClueBtn" style="width: 100%;">创建线索</button>
+        </div>
+    </div>
+    
+    <!-- 添加链接模态框 -->
+    <div class="modal" id="addLinkModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">添加链接</div>
+                <button class="close-modal" id="closeAddLinkModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="linkClueSelect">选择要链接的线索</label>
+                <select id="linkClueSelect" class="form-control">
+                    <!-- 选项会通过JS动态生成 -->
+                </select>
+            </div>
+            <div style="margin-bottom: 15px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px; font-size: 14px;">
+                <strong>提示：</strong>链接格式为 [[线索名称]]，点击已添加的链接可快速跳转到对应线索
+            </div>
+            <button class="btn btn-primary" id="insertLinkBtn" style="width: 100%;">插入链接</button>
+        </div>
+    </div>
+    
+    <!-- 添加标签模态框 -->
+    <div class="modal" id="addTagModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">添加标签</div>
+                <button class="close-modal" id="closeAddTagModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="tagInput">标签名称</label>
+                <input type="text" id="tagInput" class="form-control" placeholder="请输入标签名称">
+            </div>
+            <div style="margin-bottom: 15px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px; font-size: 14px;">
+                <strong>提示：</strong>标签用于分类和筛选线索，可输入多个标签，用逗号分隔
+            </div>
+            <button class="btn btn-primary" id="insertTagBtn" style="width: 100%;">添加标签</button>
+        </div>
+    </div>
+    
+    <!-- 添加图片模态框 -->
+    <div class="modal" id="addImageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">添加图片</div>
+                <button class="close-modal" id="closeAddImageModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">图片URL</label>
+                <input type="text" id="imageUrl" class="form-control" placeholder="请输入图片链接 (支持图床链接)">
+            </div>
+            <div class="form-group">
+                <label for="imageAlt">图片描述（可选）</label>
+                <input type="text" id="imageAlt" class="form-control" placeholder="图片描述">
+            </div>
+            <div style="margin-bottom: 15px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px; font-size: 14px;">
+                <strong>提示：</strong>可以使用图床服务（如Imgur、SM.MS、阿里云OSS等）上传图片后获取链接
+            </div>
+            <button class="btn btn-primary" id="insertImageBtn" style="width: 100%;">插入图片</button>
+        </div>
+    </div>
+    
+    <!-- 主题选择器模态框 -->
+    <div class="modal theme-selector-modal" id="themeSelectorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择主题</div>
+                <button class="close-modal" id="closeThemeSelectorModal">&times;</button>
+            </div>
+            <div class="theme-options-grid" id="themeOptionsGrid">
+                <!-- 主题选项会通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 关联线索模态框 -->
+    <div class="modal" id="associateClueModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">关联线索</div>
+                <button class="close-modal" id="closeAssociateClueModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="associateClueSelect">选择要关联的线索</label>
+                <select id="associateClueSelect" class="form-control">
+                    <option value="">选择线索...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="relationNote">关联说明（可选）</label>
+                <input type="text" id="relationNote" class="form-control" placeholder="输入关联说明">
+            </div>
+            <div style="margin-bottom: 15px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px; font-size: 14px;">
+                <strong>提示：</strong>关联的线索会显示在"相关线索"区域，点击可快速跳转
+            </div>
+            <button class="btn btn-primary" id="addAssociationBtn" style="width: 100%;">添加关联</button>
+        </div>
+    </div>
+    
+    <!-- 时间线编排主界面 -->
+    <div class="timeline-main-container" id="timelineMainContainer">
+        <div class="timeline-header">
+            <div class="timeline-title">时间线编排</div>
+            <button class="close-modal" id="closeTimelineBtn">&times;</button>
+        </div>
+        
+        <!-- 选项卡 -->
+        <div class="timeline-tabs">
+            <button class="timeline-tab active" id="timelineEditTab">编辑时间线</button>
+            <button class="timeline-tab" id="timelineViewTab">浏览时间线</button>
+        </div>
+        
+        <!-- 时间线方案选择区域 -->
+        <div class="timeline-scheme-section">
+            <div class="section-title">
+                <i class="fas fa-layer-group"></i>
+                <span>时间线方案</span>
+            </div>
+            
+            <div class="timeline-scheme-controls">
+                <div class="form-group timeline-scheme-select">
+                    <select id="timelineSchemeSelect" class="form-control">
+                        <option value="">选择时间线方案...</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" id="loadTimelineSchemeBtn">
+                    <i class="fas fa-folder-open"></i> 加载方案
+                </button>
+                <button class="btn btn-success" id="saveTimelineBtn">
+                    <i class="fas fa-save"></i> 保存方案
+                </button>
+                <button class="btn btn-danger" id="deleteTimelineSchemeBtn">
+                    <i class="fas fa-trash"></i> 删除方案
+                </button>
+                <button class="btn btn-outline" id="applyTimelineBtn">
+                    <i class="fas fa-check"></i> 应用到线索
+                </button>
+            </div>
+        </div>
+        
+        <!-- 编辑模式 -->
+        <div class="timeline-edit-mode active" id="timelineEditMode">
+            <div class="timeline-edit-controls">
+                <div class="form-group timeline-clue-select-container">
+                    <label>选择要添加到时间线的线索</label>
+                    <select id="timelineClueSelect" class="form-control timeline-clue-select" multiple size="6">
+                        <!-- 选项会通过JS动态生成 -->
+                    </select>
+                    
+                    <div class="quick-add-buttons">
+                        <button class="quick-add-btn" id="selectAllCluesBtn">
+                            <i class="fas fa-check-double"></i> 全选
+                        </button>
+                        <button class="quick-add-btn" id="deselectAllCluesBtn">
+                            <i class="fas fa-times-circle"></i> 全不选
+                        </button>
+                        <button class="quick-add-btn" id="addRecentCluesBtn">
+                            <i class="fas fa-history"></i> 添加最近5个
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="addToTimelineBtn">
+                    <i class="fas fa-plus"></i> 添加选中项
+                </button>
+                <button class="btn btn-danger" id="clearTimelineBtn">
+                    <i class="fas fa-trash"></i> 清空时间线
+                </button>
+            </div>
+            
+            <div class="timeline-content-container">
+                <div class="timeline-linear-container">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-items-container" id="timelineEditItems">
+                        <!-- 编辑中的时间线项目会在这里显示 -->
+                    </div>
+                    
+                    <div class="empty-state" id="timelineEditEmpty" style="display: none;">
+                        <i class="fas fa-history"></i>
+                        <h3>时间线为空</h3>
+                        <p>添加线索开始创建时间线</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 浏览模式 -->
+        <div class="timeline-view-mode" id="timelineViewMode">
+            <div class="timeline-view-controls">
+                <button class="btn btn-outline" id="switchToEditBtn">
+                    <i class="fas fa-edit"></i> 编辑此方案
+                </button>
+            </div>
+            
+            <div class="timeline-content-container">
+                <div class="timeline-linear-container">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-items-container" id="timelineViewItems">
+                        <!-- 浏览中的时间线项目会在这里显示 -->
+                    </div>
+                    
+                    <div class="empty-state" id="timelineViewEmpty" style="display: none;">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>未选择时间线方案</h3>
+                        <p>选择一个方案开始浏览</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 导出/导入模态框 -->
+    <div class="modal" id="exportImportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="exportImportTitle">导出数据</div>
+                <button class="close-modal" id="closeExportImportModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <div id="exportContent" style="display: none;">
+                    <label>导出数据 (JSON格式)</label>
+                    <textarea id="exportData" class="form-control" rows="12" readonly></textarea>
+                    <button class="btn btn-primary" id="copyExportBtn" style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-copy"></i> 复制到剪贴板
+                    </button>
+                </div>
+                
+                <div id="importContent" style="display: none;">
+                    <label>导入数据 (JSON格式)</label>
+                    <textarea id="importData" class="form-control" rows="12" placeholder="请粘贴JSON数据..."></textarea>
+                    <div style="margin-top: 15px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px; font-size: 14px;">
+                        <strong>注意：</strong>导入数据将覆盖当前所有数据，请确保已备份重要数据。
+                    </div>
+                    <button class="btn btn-danger" id="performImportBtn" style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-upload"></i> 导入数据
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 线索数据存储
+        let clues = JSON.parse(localStorage.getItem('trpgClues')) || [
+            {
+                id: 1,
+                title: "欢迎使用TRPG线索系统",
+                content: "这是一个专为跑团游戏设计的线索管理系统。\n\n## 基本功能\n1. **创建线索**：点击左侧的\"新建线索\"按钮\n2. **添加链接**：使用工具栏的\"添加链接\"按钮\n3. **添加图片**：点击\"添加图片\"按钮，输入图片URL\n4. **添加标签**：为线索添加标签以便分类筛选\n\n## 进阶功能\n- **时间线编排**：侧边栏的\"时间线编排\"按钮，选择线索并按时间顺序排列\n- **导出/导入**：顶部导航栏备份和恢复数据\n\n## 移动端使用\n- 点击左上角菜单按钮打开侧边栏\n- 使用底部工具栏快速操作\n- 点击链接可快速跳转",
+                tags: ["系统", "引导", "教程"],
+                timelineTime: "",
+                related: [],
+                images: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            }
+        ];
+        
+        // 时间线方案存储
+        let timelineSchemes = JSON.parse(localStorage.getItem('trpgTimelineSchemes')) || [];
+        let currentTimelineScheme = null;
+        let timelineItems = []; // 当前编辑中的时间线项目
+        
+        let currentClueId = null;
+        let allTags = [];
+        let activeTagFilter = null;
+        let searchTerm = '';
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadClues();
+            setupEventListeners();
+            updateTagFilter();
+            initThemeOptions();
+            
+            // 加载第一个线索
+            if (clues.length > 0) {
+                loadClueEditor(clues[0].id);
+            }
+            
+            // 加载主题
+            const savedTheme = localStorage.getItem('trpgTheme') || 'deepsea';
+            setTheme(savedTheme);
+        });
+
+        // 初始化主题选项
+        function initThemeOptions() {
+            const themeOptionsGrid = document.getElementById('themeOptionsGrid');
+            const themes = [
+                {id: 'night', name: '静奢之夜', colors: ['#2c3e50', '#5d7a9c', '#f5f7fa', '#d4af37']},
+                {id: 'garden', name: '禅意花园', colors: ['#4a7863', '#8a9b8c', '#f8f5f1', '#b76e4a']},
+                {id: 'modern', name: '现代都市', colors: ['#4a4a4a', '#7a7a7a', '#f0f0f0', '#b56576']},
+                {id: 'desert', name: '沙漠暮光', colors: ['#9c715c', '#c4a78c', '#f9f6f2', '#7a9eb1']},
+                {id: 'deepsea', name: '深海静思', colors: ['#2d4059', '#6a8dad', '#f0f4f8', '#5dc0a6']},
+                {id: 'twilight', name: '暮色紫韵', colors: ['#4a3b5a', '#7b6b8c', '#f5f3f7', '#c97b8d']},
+                {id: 'forest', name: '晨雾森林', colors: ['#3c6256', '#6d8a7c', '#f2f7f5', '#d9a566']},
+                {id: 'minimal', name: '极简主义', colors: ['#3a506b', '#5c7c9c', '#f8fafc', '#6cd4c5']},
+                {id: 'coffee', name: '暖日咖啡', colors: ['#6d4c41', '#a1887f', '#fbf7f3', '#8d6e63']},
+                {id: 'dusk', name: '暮光之城', colors: ['#455a64', '#78909c', '#f5f7fa', '#ff8a65']}
+            ];
+            
+            themeOptionsGrid.innerHTML = '';
+            
+            themes.forEach(theme => {
+                const themeBtn = document.createElement('button');
+                themeBtn.className = 'theme-option-btn';
+                themeBtn.dataset.theme = theme.id;
+                
+                // 创建预览颜色条
+                const previewHTML = `
+                    <div class="theme-preview" style="background: linear-gradient(90deg, ${theme.colors[0]}, ${theme.colors[1]}, ${theme.colors[3]});"></div>
+                    <div class="theme-name">${theme.name}</div>
+                `;
+                
+                themeBtn.innerHTML = previewHTML;
+                
+                themeBtn.addEventListener('click', () => {
+                    setTheme(theme.id);
+                    // 更新选中状态
+                    document.querySelectorAll('.theme-option-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    themeBtn.classList.add('active');
+                    // 关闭模态框
+                    document.getElementById('themeSelectorModal').style.display = 'none';
+                });
+                
+                themeOptionsGrid.appendChild(themeBtn);
+            });
+            
+            // 设置当前主题为选中状态
+            const savedTheme = localStorage.getItem('trpgTheme') || 'deepsea';
+            const currentThemeBtn = document.querySelector(`.theme-option-btn[data-theme="${savedTheme}"]`);
+            if (currentThemeBtn) {
+                currentThemeBtn.classList.add('active');
+            }
+        }
+
+        // 加载线索列表
+        function loadClues() {
+            const clueList = document.getElementById('clueList');
+            
+            // 筛选线索
+            let filteredClues = clues;
+            
+            // 按标签筛选
+            if (activeTagFilter && activeTagFilter !== '全部') {
+                filteredClues = filteredClues.filter(clue => 
+                    clue.tags.includes(activeTagFilter)
+                );
+            }
+            
+            // 按搜索词筛选
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filteredClues = filteredClues.filter(clue => 
+                    clue.title.toLowerCase().includes(term) ||
+                    clue.content.toLowerCase().includes(term) ||
+                    clue.tags.some(tag => tag.toLowerCase().includes(term)) ||
+                    (clue.timelineTime && clue.timelineTime.toLowerCase().includes(term))
+                );
+            }
+            
+            // 排序：按更新时间倒序
+            filteredClues.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            
+            if (filteredClues.length === 0) {
+                clueList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>未找到线索</h3>
+                        <p>${searchTerm || activeTagFilter ? '尝试更改搜索条件' : '点击"新建线索"按钮开始记录'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            clueList.innerHTML = '';
+            
+            filteredClues.forEach(clue => {
+                const clueElement = document.createElement('div');
+                clueElement.className = 'clue-item';
+                if (clue.id === currentClueId) {
+                    clueElement.classList.add('active');
+                }
+                clueElement.dataset.id = clue.id;
+                
+                // 生成预览文本（处理链接和图片）
+                let preview = clue.content;
+                // 移除图片标记
+                preview = preview.replace(/!\[.*?\]\(.*?\)/g, '[图片]');
+                // 处理链接
+                preview = preview.replace(/\[\[(.*?)\]\]/g, '<span class="clue-link">$1</span>');
+                preview = preview.substring(0, 120) + (preview.length > 120 ? '...' : '');
+                
+                // 格式化时间显示
+                let timeDisplay = '';
+                if (clue.timelineTime) {
+                    timeDisplay = `<span class="clue-time-display"><i class="far fa-clock"></i>${clue.timelineTime}</span>`;
+                }
+                
+                clueElement.innerHTML = `
+                    <div class="clue-title">
+                        <span>${clue.title}</span>
+                        <span style="font-size:11px; color:var(--text-muted);">
+                            ${timeDisplay}
+                            ${formatDate(clue.updatedAt)}
+                        </span>
+                    </div>
+                    <div class="clue-preview">${preview}</div>
+                    <div class="clue-meta">
+                        <div>
+                            ${clue.tags.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join(' ')}
+                            ${clue.tags.length > 3 ? `<span class="tag">+${clue.tags.length - 3}</span>` : ''}
+                        </div>
+                        <div>
+                            ${clue.images && clue.images.length > 0 ? `<span style="color:var(--accent-color);"><i class="fas fa-image"></i></span>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                clueElement.addEventListener('click', () => {
+                    loadClueEditor(clue.id);
+                    if (isMobile()) {
+                        hideSidebar();
+                    }
+                });
+                
+                clueList.appendChild(clueElement);
+            });
+            
+            // 更新所有标签列表
+            updateAllTags();
+        }
+
+        // 加载线索到编辑器
+        function loadClueEditor(clueId) {
+            const clue = clues.find(c => c.id == clueId);
+            if (!clue) return;
+            
+            currentClueId = clueId;
+            
+            // 更新UI
+            document.querySelectorAll('.clue-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.id == clueId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            document.getElementById('currentClueTitle').textContent = clue.title;
+            
+            // 显示标签
+            const clueTags = document.getElementById('clueTags');
+            clueTags.innerHTML = clue.tags.map(tag => 
+                `<span class="clue-tag">${tag} <button class="remove-tag" data-tag="${tag}">&times;</button></span>`
+            ).join('');
+            
+            // 添加标签移除事件
+            clueTags.querySelectorAll('.remove-tag').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const tagToRemove = this.dataset.tag;
+                    removeTagFromClue(clueId, tagToRemove);
+                });
+            });
+            
+            // 加载内容
+            const editor = document.getElementById('clueEditor');
+            
+            // 先清空编辑器
+            editor.innerHTML = '';
+            
+            // 处理内容，将markdown图片和链接转换为HTML
+            let content = clue.content;
+            
+            // 将换行符转换为br
+            content = content.replace(/\n/g, '<br>');
+            
+            // 将图片标记转换为img元素
+            content = content.replace(/!\[(.*?)\]\((.*?)\)/g, function(match, alt, src) {
+                return `<img src="${src}" alt="${alt}" class="clue-image" data-original-markdown="![${alt}](${src})" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'image-placeholder\'>图片加载失败: ${src}</div>'">`;
+            });
+            
+            // 将 [[线索名]] 转换为可点击链接
+            content = content.replace(/\[\[(.*?)\]\]/g, (match, clueName) => {
+                const linkedClue = clues.find(c => c.title === clueName);
+                if (linkedClue) {
+                    // 查找关系注释
+                    const relation = clue.related?.find(r => r.id === linkedClue.id);
+                    const note = relation?.note ? ` title="${relation.note}"` : '';
+                    return `<span class="clue-link" data-clue-id="${linkedClue.id}"${note} contenteditable="false" data-original-markdown="${match}">${clueName}</span>`;
+                }
+                return `<span class="clue-link" style="color:var(--accent-color);" contenteditable="false" data-original-markdown="${match}">${clueName} (未找到)</span>`;
+            });
+            
+            // 处理黑幕
+            content = content.replace(/\[黑幕:(.*?)\]/g, (match, text) => {
+                return `<span class="heimu">${text}</span>`;
+            });
+            
+            // 处理下划线
+            content = content.replace(/\[下划线:(.*?)\]/g, (match, text) => {
+                return `<span class="text-underline">${text}</span>`;
+            });
+            
+            // 处理删除线
+            content = content.replace(/\[删除线:(.*?)\]/g, (match, text) => {
+                return `<span class="text-strikethrough">${text}</span>`;
+            });
+            
+            // 处理颜色标记 [颜色:#ff0000:文本]
+            content = content.replace(/\[颜色:(.*?):(.*?)\]/g, (match, color, text) => {
+                return `<span style="color:${color};">${text}</span>`;
+            });
+            
+            // 处理粗体和斜体
+            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            editor.innerHTML = content;
+            
+            // 显示相关线索
+            updateRelatedClues(clueId);
+            
+            // 添加链接点击事件
+            editor.querySelectorAll('.clue-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (e.target.dataset.clueId) {
+                        loadClueEditor(e.target.dataset.clueId);
+                        if (isMobile()) {
+                            hideSidebar();
+                        }
+                    }
+                });
+            });
+            
+            // 添加图片点击事件（可查看大图）
+            editor.querySelectorAll('.clue-image').forEach(img => {
+                img.addEventListener('click', function(e) {
+                    const src = this.src;
+                    if (src && !src.includes('undefined')) {
+                        const win = window.open(src, '_blank');
+                        if (win) win.focus();
+                    }
+                });
+            });
+            
+            // 添加黑幕点击事件
+            editor.querySelectorAll('.heimu').forEach(heimu => {
+                heimu.addEventListener('click', function(e) {
+                    this.classList.toggle('revealed');
+                });
+            });
+        }
+
+        // 更新相关线索显示
+        function updateRelatedClues(clueId) {
+            const clue = clues.find(c => c.id == clueId);
+            const relatedList = document.getElementById('relatedClues');
+            
+            if (!clue || !clue.related || clue.related.length === 0) {
+                relatedList.innerHTML = '<div style="color:var(--text-muted); font-style:italic;">暂无相关线索</div>';
+                return;
+            }
+            
+            // 去重
+            const uniqueRelatedIds = [];
+            const seenIds = new Set();
+            
+            clue.related.forEach(relation => {
+                if (!seenIds.has(relation.id)) {
+                    seenIds.add(relation.id);
+                    uniqueRelatedIds.push(relation);
+                }
+            });
+            
+            relatedList.innerHTML = uniqueRelatedIds.map(relation => {
+                const relatedClue = clues.find(c => c.id == relation.id);
+                if (relatedClue) {
+                    const note = relation.note ? `<div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${relation.note}</div>` : '';
+                    return `<div class="related-item" data-id="${relatedClue.id}">${relatedClue.title}${note}</div>`;
+                }
+                return '';
+            }).join('');
+            
+            // 添加点击事件
+            relatedList.querySelectorAll('.related-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    loadClueEditor(this.dataset.id);
+                    if (isMobile()) {
+                        hideSidebar();
+                    }
+                });
+            });
+        }
+
+        // 更新所有标签
+        function updateAllTags() {
+            allTags = [];
+            clues.forEach(clue => {
+                clue.tags.forEach(tag => {
+                    if (!allTags.includes(tag)) {
+                        allTags.push(tag);
+                    }
+                });
+            });
+            
+            // 按使用频率排序
+            allTags.sort((a, b) => {
+                const countA = clues.filter(c => c.tags.includes(a)).length;
+                const countB = clues.filter(c => c.tags.includes(b)).length;
+                return countB - countA;
+            });
+        }
+
+        // 更新标签筛选器
+        function updateTagFilter() {
+            const tagFilter = document.getElementById('tagFilter');
+            tagFilter.innerHTML = '';
+            
+            // 添加"全部"标签
+            const allTag = document.createElement('span');
+            allTag.className = `tag ${activeTagFilter === null || activeTagFilter === '全部' ? 'active' : ''}`;
+            allTag.textContent = '全部';
+            allTag.dataset.tag = '全部';
+            allTag.addEventListener('click', () => {
+                activeTagFilter = activeTagFilter === '全部' ? null : '全部';
+                updateTagFilter();
+                loadClues();
+            });
+            tagFilter.appendChild(allTag);
+            
+            // 添加所有标签
+            allTags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = `tag ${activeTagFilter === tag ? 'active' : ''}`;
+                tagElement.textContent = tag;
+                tagElement.dataset.tag = tag;
+                tagElement.addEventListener('click', () => {
+                    activeTagFilter = activeTagFilter === tag ? null : tag;
+                    updateTagFilter();
+                    loadClues();
+                });
+                tagFilter.appendChild(tagElement);
+            });
+        }
+
+        // 保存线索
+        function saveClue() {
+            if (!currentClueId) {
+                showNotification('请先选择或创建线索', 'error');
+                return;
+            }
+            
+            const clueIndex = clues.findIndex(c => c.id == currentClueId);
+            if (clueIndex === -1) return;
+            
+            const editor = document.getElementById('clueEditor');
+            
+            // 获取内容
+            let content = editor.innerHTML;
+            
+            // 恢复原始markdown格式
+            // 1. 恢复图片
+            const imgElements = editor.querySelectorAll('.clue-image[data-original-markdown]');
+            imgElements.forEach(img => {
+                const originalMarkdown = img.getAttribute('data-original-markdown');
+                if (originalMarkdown) {
+                    content = content.replace(img.outerHTML, originalMarkdown);
+                }
+            });
+            
+            // 2. 恢复链接
+            const linkElements = editor.querySelectorAll('.clue-link[data-original-markdown]');
+            linkElements.forEach(link => {
+                const originalMarkdown = link.getAttribute('data-original-markdown');
+                if (originalMarkdown) {
+                    content = content.replace(link.outerHTML, originalMarkdown);
+                }
+            });
+            
+            // 3. 恢复黑幕
+            const heimuElements = editor.querySelectorAll('.heimu');
+            heimuElements.forEach(heimu => {
+                const text = heimu.textContent;
+                content = content.replace(heimu.outerHTML, `[黑幕:${text}]`);
+            });
+            
+            // 4. 恢复下划线
+            const underlineElements = editor.querySelectorAll('.text-underline');
+            underlineElements.forEach(underline => {
+                const text = underline.textContent;
+                content = content.replace(underline.outerHTML, `[下划线:${text}]`);
+            });
+            
+            // 5. 恢复删除线
+            const strikethroughElements = editor.querySelectorAll('.text-strikethrough');
+            strikethroughElements.forEach(strikethrough => {
+                const text = strikethrough.textContent;
+                content = content.replace(strikethrough.outerHTML, `[删除线:${text}]`);
+            });
+            
+            // 6. 处理颜色标记
+            const colorElements = editor.querySelectorAll('[style*="color"]');
+            colorElements.forEach(el => {
+                const style = el.getAttribute('style');
+                const match = style.match(/color:\s*(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3}|[a-zA-Z]+);/);
+                if (match) {
+                    const color = match[1];
+                    const text = el.textContent;
+                    content = content.replace(el.outerHTML, `[颜色:${color}:${text}]`);
+                }
+            });
+            
+            // 7. 处理粗体和斜体
+            content = content.replace(/<strong>/g, '**').replace(/<\/strong>/g, '**');
+            content = content.replace(/<b>/g, '**').replace(/<\/b>/g, '**');
+            content = content.replace(/<em>/g, '*').replace(/<\/em>/g, '*');
+            content = content.replace(/<i>/g, '*').replace(/<\/i>/g, '*');
+            
+            // 8. 清理剩余的HTML标签和样式
+            content = content.replace(/<u>/g, '[下划线:').replace(/<\/u>/g, ']');
+            content = content.replace(/<s>/g, '[删除线:').replace(/<\/s>/g, ']');
+            content = content.replace(/<br>/g, '\n');
+            content = content.replace(/<div>/g, '\n').replace(/<\/div>/g, '');
+            content = content.replace(/<span>/g, '').replace(/<\/span>/g, '');
+            content = content.replace(/<ul>/g, '\n').replace(/<\/ul>/g, '\n');
+            content = content.replace(/<ol>/g, '\n').replace(/<\/ol>/g, '\n');
+            content = content.replace(/<li>/g, '* ').replace(/<\/li>/g, '\n');
+            
+            // 提取图片链接
+            const imageRegex = /!\[.*?\]\((.*?)\)/g;
+            const images = [];
+            let match;
+            while ((match = imageRegex.exec(content)) !== null) {
+                if (match[1] && !match[1].includes('undefined')) {
+                    images.push(match[1]);
+                }
+            }
+            
+            clues[clueIndex].content = content;
+            clues[clueIndex].images = images;
+            clues[clueIndex].updatedAt = new Date().toISOString();
+            
+            // 更新本地存储
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            
+            // 重新加载列表
+            loadClues();
+            
+            showNotification('线索保存成功', 'success');
+        }
+
+        // 新建线索
+        function createNewClue() {
+            const nameInput = document.getElementById('clueName');
+            const tagsInput = document.getElementById('clueTagsInput');
+            
+            const name = nameInput.value.trim();
+            if (!name) {
+                showNotification('请输入线索名称', 'error');
+                return;
+            }
+            
+            // 检查是否已存在同名线索
+            if (clues.some(c => c.title === name)) {
+                showNotification('已存在同名线索', 'error');
+                return;
+            }
+            
+            const newId = clues.length > 0 ? Math.max(...clues.map(c => c.id)) + 1 : 1;
+            const tags = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
+            const newClue = {
+                id: newId,
+                title: name,
+                content: '',
+                tags: tags,
+                timelineTime: '',
+                related: [],
+                images: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            clues.push(newClue);
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            
+            // 关闭模态框并重置表单
+            document.getElementById('newClueModal').style.display = 'none';
+            nameInput.value = '';
+            tagsInput.value = '';
+            
+            // 更新UI
+            loadClues();
+            updateAllTags();
+            updateTagFilter();
+            
+            // 加载新线索到编辑器
+            loadClueEditor(newId);
+            
+            showNotification(`线索"${name}"创建成功`, 'success');
+        }
+
+        // 添加链接
+        function addLink() {
+            const select = document.getElementById('linkClueSelect');
+            select.innerHTML = '<option value="">选择线索...</option>';
+            
+            clues.forEach(clue => {
+                if (clue.id != currentClueId) {
+                    const option = document.createElement('option');
+                    option.value = clue.id;
+                    option.textContent = clue.title;
+                    select.appendChild(option);
+                }
+            });
+            
+            document.getElementById('addLinkModal').style.display = 'flex';
+        }
+
+        // 插入链接
+        function insertLink() {
+            const select = document.getElementById('linkClueSelect');
+            const clueId = parseInt(select.value);
+            
+            if (!clueId) {
+                showNotification('请选择要链接的线索', 'error');
+                return;
+            }
+            
+            const clue = clues.find(c => c.id === clueId);
+            if (!clue) return;
+            
+            // 在编辑器中插入链接标记
+            const editor = document.getElementById('clueEditor');
+            const linkMark = `[[${clue.title}]]`;
+            
+            // 插入到编辑器
+            insertTextAtCursor(linkMark);
+            
+            // 关闭模态框
+            document.getElementById('addLinkModal').style.display = 'none';
+            select.value = '';
+            
+            showNotification(`链接"${clue.title}"已插入`, 'success');
+        }
+
+        // 添加图片
+        function addImage() {
+            document.getElementById('addImageModal').style.display = 'flex';
+        }
+
+        // 插入图片
+        function insertImage() {
+            const imageUrl = document.getElementById('imageUrl').value.trim();
+            const imageAlt = document.getElementById('imageAlt').value.trim() || '图片';
+            
+            if (!imageUrl) {
+                showNotification('请输入图片URL', 'error');
+                return;
+            }
+            
+            // 简单的URL验证
+            if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                showNotification('请输入有效的图片URL', 'error');
+                return;
+            }
+            
+            // 在编辑器中插入图片标记
+            const imgMark = `![${imageAlt}](${imageUrl})`;
+            insertTextAtCursor(imgMark);
+            
+            // 关闭模态框
+            document.getElementById('addImageModal').style.display = 'none';
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imageAlt').value = '';
+            
+            showNotification('图片已插入', 'success');
+        }
+
+        // 添加标签
+        function addTag() {
+            document.getElementById('addTagModal').style.display = 'flex';
+        }
+
+        // 插入标签
+        function insertTag() {
+            const tagInput = document.getElementById('tagInput');
+            const tagText = tagInput.value.trim();
+            
+            if (!tagText) {
+                showNotification('请输入标签名称', 'error');
+                return;
+            }
+            
+            const tags = tagText.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
+            const clueIndex = clues.findIndex(c => c.id == currentClueId);
+            if (clueIndex !== -1) {
+                tags.forEach(tag => {
+                    if (!clues[clueIndex].tags.includes(tag)) {
+                        clues[clueIndex].tags.push(tag);
+                    }
+                });
+                
+                // 更新本地存储
+                localStorage.setItem('trpgClues', JSON.stringify(clues));
+                
+                // 更新UI
+                loadClueEditor(currentClueId);
+                
+                // 更新所有标签和筛选器
+                updateAllTags();
+                updateTagFilter();
+                
+                // 关闭模态框
+                document.getElementById('addTagModal').style.display = 'none';
+                tagInput.value = '';
+                
+                showNotification(`标签"${tags.join(', ')}"已添加`, 'success');
+            }
+        }
+
+        // 移除标签
+        function removeTagFromClue(clueId, tag) {
+            const clueIndex = clues.findIndex(c => c.id == clueId);
+            if (clueIndex !== -1) {
+                clues[clueIndex].tags = clues[clueIndex].tags.filter(t => t !== tag);
+                
+                // 更新本地存储
+                localStorage.setItem('trpgClues', JSON.stringify(clues));
+                
+                // 重新加载编辑器
+                loadClueEditor(clueId);
+                
+                // 更新所有标签和筛选器
+                updateAllTags();
+                updateTagFilter();
+                
+                showNotification(`标签"${tag}"已移除`, 'success');
+            }
+        }
+
+        // 删除线索
+        function deleteClue() {
+            if (!currentClueId) {
+                showNotification('请先选择线索', 'error');
+                return;
+            }
+            
+            const clue = clues.find(c => c.id == currentClueId);
+            if (!clue) return;
+            
+            if (!confirm(`确定要删除线索"${clue.title}"吗？此操作不可撤销。`)) return;
+            
+            // 从所有线索的related中移除
+            clues.forEach(clue => {
+                if (clue.related) {
+                    clue.related = clue.related.filter(r => r.id != currentClueId);
+                }
+            });
+            
+            // 删除线索
+            clues = clues.filter(c => c.id != currentClueId);
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            
+            // 重置编辑器
+            currentClueId = null;
+            document.getElementById('currentClueTitle').textContent = '选择或创建线索';
+            document.getElementById('clueEditor').innerHTML = '';
+            document.getElementById('clueTags').innerHTML = '';
+            document.getElementById('relatedClues').innerHTML = '<div style="color:var(--text-muted); font-style:italic;">暂无相关线索</div>';
+            
+            // 更新列表
+            loadClues();
+            updateAllTags();
+            updateTagFilter();
+            
+            showNotification('线索已删除', 'success');
+        }
+
+        // 显示时间线编排界面
+        function showTimeline() {
+            // 重置状态
+            currentTimelineScheme = null;
+            timelineItems = [];
+            
+            // 更新线索选择下拉框（多选模式）
+            updateClueSelectForTimeline();
+            
+            // 更新方案选择下拉框
+            updateSchemeSelect();
+            
+            // 清空编辑和浏览区域
+            document.getElementById('timelineEditItems').innerHTML = '';
+            document.getElementById('timelineViewItems').innerHTML = '';
+            
+            // 切换到编辑模式
+            switchTimelineTab('edit');
+            
+            document.getElementById('timelineMainContainer').style.display = 'block';
+            
+            // 显示空状态
+            document.getElementById('timelineEditEmpty').style.display = 'block';
+            document.getElementById('timelineViewEmpty').style.display = 'block';
+        }
+
+        // 更新线索选择下拉框（多选模式）
+        function updateClueSelectForTimeline() {
+            const select = document.getElementById('timelineClueSelect');
+            select.innerHTML = '';
+            
+            // 按更新时间排序
+            const sortedClues = [...clues].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            
+            sortedClues.forEach(clue => {
+                // 检查是否已在时间线中
+                const isInTimeline = timelineItems.some(item => item.id === clue.id);
+                
+                const option = document.createElement('option');
+                option.value = clue.id;
+                option.textContent = clue.title;
+                option.selected = isInTimeline;
+                select.appendChild(option);
+            });
+        }
+
+        // 更新方案选择下拉框
+        function updateSchemeSelect() {
+            const select = document.getElementById('timelineSchemeSelect');
+            select.innerHTML = '<option value="">选择时间线方案...</option>';
+            
+            timelineSchemes.forEach((scheme, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = scheme.name;
+                select.appendChild(option);
+            });
+        }
+
+        // 添加选中线索到时间线
+        function addSelectedCluesToTimeline() {
+            const select = document.getElementById('timelineClueSelect');
+            const selectedOptions = Array.from(select.selectedOptions);
+            
+            if (selectedOptions.length === 0) {
+                showNotification('请选择要添加的线索', 'error');
+                return;
+            }
+            
+            let addedCount = 0;
+            
+            selectedOptions.forEach(option => {
+                const clueId = parseInt(option.value);
+                
+                // 检查是否已存在
+                if (timelineItems.find(item => item.id === clueId)) {
+                    return;
+                }
+                
+                const clue = clues.find(c => c.id === clueId);
+                if (!clue) return;
+                
+                timelineItems.push({
+                    id: clue.id,
+                    title: clue.title,
+                    time: clue.timelineTime || '',
+                    order: timelineItems.length + 1
+                });
+                
+                addedCount++;
+            });
+            
+            // 重新渲染编辑项目
+            renderTimelineEditItems();
+            
+            showNotification(`${addedCount} 条线索已添加到时间线`, 'success');
+        }
+
+        // 渲染编辑中的时间线项目
+        function renderTimelineEditItems() {
+            const container = document.getElementById('timelineEditItems');
+            const emptyState = document.getElementById('timelineEditEmpty');
+            
+            if (timelineItems.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            
+            // 按顺序排序
+            timelineItems.sort((a, b) => a.order - b.order);
+            
+            timelineItems.forEach((item, index) => {
+                const clue = clues.find(c => c.id === item.id);
+                if (!clue) return;
+                
+                const itemWrapper = document.createElement('div');
+                itemWrapper.className = 'timeline-item-wrapper';
+                itemWrapper.dataset.index = index;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+                
+                // 生成预览文本
+                let preview = clue.content;
+                preview = preview.replace(/!\[.*?\]\(.*?\)/g, '[图片]');
+                preview = preview.replace(/\[\[(.*?)\]\]/g, '$1');
+                preview = preview.replace(/\[黑幕:(.*?)\]/g, '$1');
+                preview = preview.substring(0, 80) + (preview.length > 80 ? '...' : '');
+                
+                // 修改：时间线项目不再显示标签
+                itemElement.innerHTML = `
+                    <div class="timeline-item-header">
+                        <div class="timeline-item-title">${clue.title}</div>
+                        <div class="timeline-item-order">${index + 1}</div>
+                    </div>
+                    <div class="timeline-item-preview">${preview}</div>
+                    <div class="timeline-item-time-edit">
+                        <i class="far fa-clock"></i>
+                        <input type="text" class="timeline-time-input" data-index="${index}" placeholder="例如: 第一天上午" value="${item.time || ''}">
+                    </div>
+                    <div class="timeline-item-controls">
+                        <button class="timeline-edit-btn move-up-btn" data-index="${index}" title="上移"><i class="fas fa-arrow-up"></i></button>
+                        <button class="timeline-edit-btn move-down-btn" data-index="${index}" title="下移"><i class="fas fa-arrow-down"></i></button>
+                        <button class="timeline-edit-btn remove-btn" data-index="${index}" title="移除"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                
+                // 添加上移事件
+                itemElement.querySelector('.move-up-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.dataset.index);
+                    moveTimelineItem(index, 'up');
+                });
+                
+                // 添加下移事件
+                itemElement.querySelector('.move-down-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.dataset.index);
+                    moveTimelineItem(index, 'down');
+                });
+                
+                // 添加移除事件
+                itemElement.querySelector('.remove-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.dataset.index);
+                    removeFromTimeline(index);
+                });
+                
+                // 添加时间输入事件
+                itemElement.querySelector('.timeline-time-input').addEventListener('input', function(e) {
+                    const index = parseInt(this.dataset.index);
+                    timelineItems[index].time = this.value;
+                });
+                
+                itemWrapper.appendChild(itemElement);
+                container.appendChild(itemWrapper);
+            });
+        }
+
+        // 移动时间线项目
+        function moveTimelineItem(index, direction) {
+            if (direction === 'up' && index > 0) {
+                // 上移
+                [timelineItems[index], timelineItems[index - 1]] = [timelineItems[index - 1], timelineItems[index]];
+            } else if (direction === 'down' && index < timelineItems.length - 1) {
+                // 下移
+                [timelineItems[index], timelineItems[index + 1]] = [timelineItems[index + 1], timelineItems[index]];
+            } else {
+                return;
+            }
+            
+            // 重新排序
+            timelineItems.forEach((item, i) => {
+                item.order = i + 1;
+            });
+            
+            renderTimelineEditItems();
+        }
+
+        // 从时间线中移除项目
+        function removeFromTimeline(index) {
+            if (index >= 0 && index < timelineItems.length) {
+                const removedItem = timelineItems[index];
+                timelineItems.splice(index, 1);
+                
+                // 重新排序
+                timelineItems.forEach((item, i) => {
+                    item.order = i + 1;
+                });
+                
+                renderTimelineEditItems();
+                // 更新选择下拉框
+                updateClueSelectForTimeline();
+                showNotification('已从时间线中移除', 'success');
+            }
+        }
+
+        // 清空时间线
+        function clearTimeline() {
+            if (timelineItems.length === 0) {
+                showNotification('时间线已经是空的', 'info');
+                return;
+            }
+            
+            if (!confirm('确定要清空当前时间线吗？')) return;
+            
+            timelineItems = [];
+            currentTimelineScheme = null;
+            
+            renderTimelineEditItems();
+            // 更新选择下拉框
+            updateClueSelectForTimeline();
+            showNotification('时间线已清空', 'success');
+        }
+
+        // 保存时间线方案
+        function saveTimelineScheme() {
+            if (timelineItems.length === 0) {
+                showNotification('时间线为空，无法保存', 'error');
+                return;
+            }
+            
+            const schemeName = prompt('请输入时间线方案名称:');
+            if (!schemeName || !schemeName.trim()) {
+                showNotification('方案名称不能为空', 'error');
+                return;
+            }
+            
+            const timelineData = {
+                id: currentTimelineScheme ? currentTimelineScheme.id : Date.now(),
+                name: schemeName.trim(),
+                items: [...timelineItems],
+                createdAt: currentTimelineScheme ? currentTimelineScheme.createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            // 查找是否已存在同名时间线方案
+            const existingIndex = timelineSchemes.findIndex(t => t.id === timelineData.id);
+            
+            if (existingIndex !== -1) {
+                // 更新现有时间线方案
+                timelineSchemes[existingIndex] = timelineData;
+                showNotification(`时间线方案"${schemeName}"已更新`, 'success');
+            } else {
+                // 检查是否已存在同名方案
+                const duplicateIndex = timelineSchemes.findIndex(t => t.name === schemeName);
+                if (duplicateIndex !== -1) {
+                    if (!confirm(`已存在名为"${schemeName}"的时间线方案，是否覆盖？`)) {
+                        return;
+                    }
+                    timelineSchemes[duplicateIndex] = timelineData;
+                    showNotification(`时间线方案"${schemeName}"已覆盖`, 'success');
+                } else {
+                    // 添加新时间线方案
+                    timelineSchemes.push(timelineData);
+                    showNotification(`时间线方案"${schemeName}"已保存`, 'success');
+                }
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('trpgTimelineSchemes', JSON.stringify(timelineSchemes));
+            
+            currentTimelineScheme = timelineData;
+            
+            // 更新方案选择下拉框
+            updateSchemeSelect();
+            
+            // 自动切换到浏览模式并加载
+            switchTimelineTab('view');
+            loadTimelineSchemeToView(timelineData);
+        }
+
+        // 加载时间线方案
+        function loadTimelineScheme() {
+            const select = document.getElementById('timelineSchemeSelect');
+            const index = parseInt(select.value);
+            
+            if (isNaN(index) || index < 0 || index >= timelineSchemes.length) {
+                showNotification('请先选择时间线方案', 'error');
+                return;
+            }
+            
+            const scheme = timelineSchemes[index];
+            
+            // 确认加载
+            if (timelineItems.length > 0) {
+                if (!confirm('加载新方案将替换当前时间线，是否继续？')) {
+                    return;
+                }
+            }
+            
+            currentTimelineScheme = scheme;
+            timelineItems = [...scheme.items];
+            
+            // 重新渲染编辑项目
+            renderTimelineEditItems();
+            
+            // 更新选择下拉框
+            updateClueSelectForTimeline();
+            
+            // 自动切换到编辑模式
+            switchTimelineTab('edit');
+            
+            showNotification(`时间线方案"${scheme.name}"已加载`, 'success');
+        }
+
+        // 加载时间线方案到浏览视图
+        function loadTimelineSchemeToView(scheme) {
+            if (!scheme) {
+                const select = document.getElementById('timelineSchemeSelect');
+                const index = parseInt(select.value);
+                
+                if (isNaN(index) || index < 0 || index >= timelineSchemes.length) {
+                    document.getElementById('timelineViewEmpty').style.display = 'block';
+                    document.getElementById('timelineViewItems').innerHTML = '';
+                    return;
+                }
+                
+                scheme = timelineSchemes[index];
+            }
+            
+            if (!scheme || !scheme.items || scheme.items.length === 0) {
+                document.getElementById('timelineViewEmpty').style.display = 'block';
+                document.getElementById('timelineViewItems').innerHTML = '';
+                return;
+            }
+            
+            document.getElementById('timelineViewEmpty').style.display = 'none';
+            const container = document.getElementById('timelineViewItems');
+            container.innerHTML = '';
+            
+            // 按顺序排序
+            const sortedItems = [...scheme.items].sort((a, b) => a.order - b.order);
+            
+            sortedItems.forEach((item, index) => {
+                const clue = clues.find(c => c.id === item.id);
+                if (!clue) return;
+                
+                const itemWrapper = document.createElement('div');
+                itemWrapper.className = 'timeline-item-wrapper';
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+                
+                // 生成预览文本
+                let preview = clue.content;
+                preview = preview.replace(/!\[.*?\]\(.*?\)/g, '[图片]');
+                preview = preview.replace(/\[\[(.*?)\]\]/g, '$1');
+                preview = preview.replace(/\[黑幕:(.*?)\]/g, '$1');
+                preview = preview.substring(0, 80) + (preview.length > 80 ? '...' : '');
+                
+                // 修改：浏览模式也不再显示标签
+                itemElement.innerHTML = `
+                    <div class="timeline-item-header">
+                        <div class="timeline-item-title">${clue.title}</div>
+                        <div class="timeline-item-order">${index + 1}</div>
+                    </div>
+                    <div class="timeline-item-preview">${preview}</div>
+                    <div style="margin-top: 10px; color: var(--timeline-color); font-weight: 600;">
+                        <i class="far fa-clock"></i> ${item.time || '未设置时间'}
+                    </div>
+                `;
+                
+                // 点击跳转到线索
+                itemElement.addEventListener('click', function() {
+                    loadClueEditor(item.id);
+                    document.getElementById('timelineMainContainer').style.display = 'none';
+                });
+                
+                itemWrapper.appendChild(itemElement);
+                container.appendChild(itemWrapper);
+            });
+        }
+
+        // 应用时间线方案到线索
+        function applyTimelineSchemeToClues() {
+            const select = document.getElementById('timelineSchemeSelect');
+            const index = parseInt(select.value);
+            
+            if (isNaN(index) || index < 0 || index >= timelineSchemes.length) {
+                showNotification('请先选择时间线方案', 'error');
+                return;
+            }
+            
+            const scheme = timelineSchemes[index];
+            
+            if (scheme.items.length === 0) {
+                showNotification('时间线方案为空，无法应用', 'error');
+                return;
+            }
+            
+            // 确认操作
+            if (!confirm(`确定要将时间线方案"${scheme.name}"应用到所有线索吗？这将覆盖线索的现有时间设置。`)) {
+                return;
+            }
+            
+            let updatedCount = 0;
+            
+            // 首先清除所有线索的时间
+            clues.forEach(clue => {
+                clue.timelineTime = '';
+            });
+            
+            // 然后按时间线方案设置时间
+            scheme.items.forEach(item => {
+                const clueIndex = clues.findIndex(c => c.id === item.id);
+                if (clueIndex !== -1 && item.time) {
+                    clues[clueIndex].timelineTime = item.time;
+                    clues[clueIndex].updatedAt = new Date().toISOString();
+                    updatedCount++;
+                }
+            });
+            
+            // 保存更新
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            
+            // 重新加载线索列表
+            loadClues();
+            
+            // 如果当前编辑器中有线索，也更新它
+            if (currentClueId) {
+                const currentClue = clues.find(c => c.id === currentClueId);
+                if (currentClue) {
+                    loadClueEditor(currentClueId);
+                }
+            }
+            
+            showNotification(`已应用时间线方案"${scheme.name}"到 ${updatedCount} 个线索`, 'success');
+        }
+
+        // 删除时间线方案
+        function deleteTimelineScheme() {
+            const select = document.getElementById('timelineSchemeSelect');
+            const index = parseInt(select.value);
+            
+            if (isNaN(index) || index < 0 || index >= timelineSchemes.length) {
+                showNotification('请先选择要删除的时间线方案', 'error');
+                return;
+            }
+            
+            const scheme = timelineSchemes[index];
+            
+            if (!confirm(`确定要删除时间线方案"${scheme.name}"吗？此操作不可撤销。`)) {
+                return;
+            }
+            
+            // 删除方案
+            timelineSchemes.splice(index, 1);
+            
+            // 如果删除的是当前方案，清除当前方案
+            if (currentTimelineScheme && currentTimelineScheme.id === scheme.id) {
+                currentTimelineScheme = null;
+                timelineItems = [];
+                renderTimelineEditItems();
+                updateClueSelectForTimeline();
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('trpgTimelineSchemes', JSON.stringify(timelineSchemes));
+            
+            // 更新方案选择下拉框
+            updateSchemeSelect();
+            
+            // 清空浏览视图
+            document.getElementById('timelineViewEmpty').style.display = 'block';
+            document.getElementById('timelineViewItems').innerHTML = '';
+            
+            showNotification(`时间线方案"${scheme.name}"已删除`, 'success');
+        }
+
+        // 切换时间线选项卡
+        function switchTimelineTab(tab) {
+            // 移除所有选项卡的active类
+            document.querySelectorAll('.timeline-tab').forEach(tabEl => {
+                tabEl.classList.remove('active');
+            });
+            
+            // 隐藏所有模式
+            document.querySelectorAll('.timeline-edit-mode, .timeline-view-mode').forEach(mode => {
+                mode.style.display = 'none';
+            });
+            
+            // 激活选中的选项卡
+            if (tab === 'edit') {
+                document.getElementById('timelineEditTab').classList.add('active');
+                document.getElementById('timelineEditMode').style.display = 'block';
+            } else if (tab === 'view') {
+                document.getElementById('timelineViewTab').classList.add('active');
+                document.getElementById('timelineViewMode').style.display = 'block';
+                
+                // 加载选中的方案到浏览视图
+                loadTimelineSchemeToView();
+            }
+        }
+
+        // 设置主题
+        function setTheme(themeName) {
+            // 移除所有主题类
+            document.body.classList.remove(
+                'theme-night', 'theme-garden', 'theme-modern', 'theme-desert',
+                'theme-deepsea', 'theme-twilight', 'theme-forest', 'theme-minimal',
+                'theme-coffee', 'theme-dusk'
+            );
+            
+            // 添加新主题类
+            if (themeName !== 'default') {
+                document.body.classList.add(`theme-${themeName}`);
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('trpgTheme', themeName);
+        }
+
+        // 显示主题选择器
+        function showThemeSelector() {
+            document.getElementById('themeSelectorModal').style.display = 'flex';
+        }
+
+        // 导出总数据
+        function exportData() {
+            const exportData = {
+                clues: clues,
+                timelineSchemes: timelineSchemes,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            document.getElementById('exportData').value = dataStr;
+            
+            document.getElementById('exportImportTitle').textContent = '导出数据';
+            document.getElementById('exportContent').style.display = 'block';
+            document.getElementById('importContent').style.display = 'none';
+            document.getElementById('exportImportModal').style.display = 'flex';
+        }
+
+        // 导入总数据
+        function importData() {
+            document.getElementById('exportImportTitle').textContent = '导入数据';
+            document.getElementById('exportContent').style.display = 'none';
+            document.getElementById('importContent').style.display = 'block';
+            document.getElementById('exportImportModal').style.display = 'flex';
+        }
+
+        // 执行总数据导入
+        function performImport() {
+            const importData = document.getElementById('importData').value.trim();
+            
+            if (!importData) {
+                showNotification('请输入要导入的数据', 'error');
+                return;
+            }
+            
+            try {
+                const parsedData = JSON.parse(importData);
+                
+                // 验证数据格式
+                if (!Array.isArray(parsedData.clues)) {
+                    throw new Error('数据格式不正确，应为包含clues数组的对象');
+                }
+                
+                // 确认覆盖
+                if (!confirm('导入数据将覆盖当前所有数据，确定要继续吗？')) {
+                    return;
+                }
+                
+                clues = parsedData.clues;
+                timelineSchemes = parsedData.timelineSchemes || [];
+                
+                // 保存到本地存储
+                localStorage.setItem('trpgClues', JSON.stringify(clues));
+                localStorage.setItem('trpgTimelineSchemes', JSON.stringify(timelineSchemes));
+                
+                // 重置UI
+                currentClueId = null;
+                currentTimelineScheme = null;
+                timelineItems = [];
+                document.getElementById('importData').value = '';
+                document.getElementById('exportImportModal').style.display = 'none';
+                
+                // 重新加载
+                loadClues();
+                updateAllTags();
+                updateTagFilter();
+                
+                // 重置编辑器
+                document.getElementById('currentClueTitle').textContent = '选择或创建线索';
+                document.getElementById('clueEditor').innerHTML = '';
+                document.getElementById('clueTags').innerHTML = '';
+                document.getElementById('relatedClues').innerHTML = '<div style="color:var(--text-muted); font-style:italic;">暂无相关线索</div>';
+                
+                showNotification(`成功导入 ${clues.length} 条线索和 ${timelineSchemes.length} 个时间线方案`, 'success');
+            } catch (error) {
+                showNotification(`导入失败: ${error.message}`, 'error');
+                console.error('导入错误:', error);
+            }
+        }
+
+        // 复制导出数据到剪贴板
+        function copyExportData() {
+            const exportData = document.getElementById('exportData');
+            exportData.select();
+            exportData.setSelectionRange(0, 99999);
+    
+            try {
+                navigator.clipboard.writeText(exportData.value).then(() => {
+                    showNotification('数据已复制到剪贴板', 'success');
+                }).catch(err => {
+                    document.execCommand('copy');
+                    showNotification('数据已复制到剪贴板', 'success');
+                });
+            } catch (err) {
+                document.execCommand('copy');
+                showNotification('数据已复制到剪贴板', 'success');
+            }
+        }
+
+        // 清空数据
+        function clearData() {
+            if (!confirm('确定要清空所有数据吗？此操作不可撤销。')) return;
+            
+            clues = [
+                {
+                    id: 1,
+                    title: "欢迎使用TRPG线索系统",
+                    content: "这是一个专为跑团游戏设计的线索管理系统。\n\n## 基本功能\n1. **创建线索**：点击左侧的\"新建线索\"按钮\n2. **添加链接**：使用工具栏的\"添加链接\"按钮\n3. **添加图片**：点击\"添加图片\"按钮，输入图片URL\n4. **添加标签**：为线索添加标签以便分类筛选\n\n## 进阶功能\n- **时间线编排**：侧边栏的\"时间线编排\"按钮，选择线索并按时间顺序排列\n- **导出/导入**：顶部导航栏备份和恢复数据\n\n## 移动端使用\n- 点击左上角菜单按钮打开侧边栏\n- 使用底部工具栏快速操作\n- 点击链接可快速跳转",
+                    tags: ["系统", "引导", "教程"],
+                    timelineTime: "",
+                    related: [],
+                    images: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }
+            ];
+            
+            timelineSchemes = [];
+            
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            localStorage.setItem('trpgTimelineSchemes', JSON.stringify(timelineSchemes));
+            
+            // 重置UI
+            currentClueId = null;
+            currentTimelineScheme = null;
+            timelineItems = [];
+            document.getElementById('currentClueTitle').textContent = '选择或创建线索';
+            document.getElementById('clueEditor').innerHTML = '';
+            document.getElementById('clueTags').innerHTML = '';
+            document.getElementById('relatedClues').innerHTML = '<div style="color:var(--text-muted); font-style:italic;">暂无相关线索</div>';
+            
+            // 重新加载
+            loadClues();
+            updateAllTags();
+            updateTagFilter();
+            
+            showNotification('数据已清空，恢复为初始状态', 'success');
+        }
+
+        // 编辑器功能 - 重构版本
+        // 应用文本格式
+        function applyFormat(command, value = null) {
+            const editor = document.getElementById('clueEditor');
+            editor.focus();
+            
+            // 使用document.execCommand实现基本格式化
+            try {
+                if (command === 'foreColor' && value) {
+                    document.execCommand('foreColor', false, value);
+                } else if (command === 'formatBlock' && value) {
+                    document.execCommand('formatBlock', false, value);
+                } else {
+                    document.execCommand(command, false, value);
+                }
+            } catch (e) {
+                console.error('格式化错误:', e);
+                showNotification('格式化失败', 'error');
+            }
+        }
+
+        // 修复黑幕功能
+        function applyHeimu() {
+            const editor = document.getElementById('clueEditor');
+            editor.focus();
+            
+            const selection = window.getSelection();
+            if (selection.rangeCount === 0) return;
+            
+            const range = selection.getRangeAt(0);
+            const selectedText = selection.toString();
+            
+            // 检查是否已经在黑幕中
+            let heimuParent = null;
+            let currentNode = range.commonAncestorContainer;
+            
+            while (currentNode && currentNode !== editor) {
+                if (currentNode.nodeType === 1 && currentNode.classList && currentNode.classList.contains('heimu')) {
+                    heimuParent = currentNode;
+                    break;
+                }
+                currentNode = currentNode.parentNode;
+            }
+            
+            if (heimuParent) {
+                // 如果已经在黑幕中，移除黑幕
+                const text = heimuParent.textContent;
+                const textNode = document.createTextNode(text);
+                heimuParent.parentNode.replaceChild(textNode, heimuParent);
+                
+                // 恢复选区
+                const newRange = document.createRange();
+                newRange.setStart(textNode, 0);
+                newRange.setEnd(textNode, text.length);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            } else {
+                // 如果不在黑幕中，应用黑幕
+                if (selectedText) {
+                    // 如果有选中文本，将选中文本包裹在黑幕中
+                    const heimuSpan = document.createElement('span');
+                    heimuSpan.className = 'heimu';
+                    heimuSpan.textContent = selectedText;
+                    
+                    // 添加点击事件
+                    heimuSpan.addEventListener('click', function() {
+                        this.classList.toggle('revealed');
+                    });
+                    
+                    range.deleteContents();
+                    range.insertNode(heimuSpan);
+                    
+                    // 将光标移动到黑幕后
+                    range.setStartAfter(heimuSpan);
+                    range.setEndAfter(heimuSpan);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                } else {
+                    // 如果没有选中文本，在当前光标位置插入黑幕占位符
+                    const heimuSpan = document.createElement('span');
+                    heimuSpan.className = 'heimu';
+                    heimuSpan.textContent = '黑幕内容';
+                    
+                    // 添加点击事件
+                    heimuSpan.addEventListener('click', function() {
+                        this.classList.toggle('revealed');
+                    });
+                    
+                    range.insertNode(heimuSpan);
+                    
+                    // 将光标移动到占位符内
+                    range.setStart(heimuSpan.firstChild, 0);
+                    range.setEnd(heimuSpan.firstChild, heimuSpan.textContent.length);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            }
+            
+            showNotification('黑幕已应用', 'success');
+        }
+
+        // 修复列表功能 - 防止空列表项删除
+        function handleListKeydown(e) {
+            const editor = document.getElementById('clueEditor');
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount === 0) return;
+            
+            const range = selection.getRangeAt(0);
+            const container = range.commonAncestorContainer;
+            
+            // 检查是否在列表项中
+            let listItem = container;
+            while (listItem && listItem !== editor) {
+                if (listItem.tagName === 'LI') {
+                    break;
+                }
+                listItem = listItem.parentNode;
+            }
+            
+            if (listItem && listItem.tagName === 'LI') {
+                const list = listItem.parentNode;
+                const isOrdered = list.tagName === 'OL';
+                const listItems = list.getElementsByTagName('LI');
+                
+                // 检查当前列表项是否为空
+                const isEmpty = listItem.textContent.trim() === '' || 
+                               (listItem.childNodes.length === 1 && 
+                                listItem.childNodes[0].nodeType === 1 && 
+                                listItem.childNodes[0].tagName === 'BR');
+                
+                if (e.key === 'Enter') {
+                    // 处理回车键
+                    if (isEmpty && listItems.length === 1) {
+                        // 如果这是唯一的空列表项，移除整个列表
+                        e.preventDefault();
+                        
+                        // 创建一个新段落
+                        const p = document.createElement('div');
+                        p.innerHTML = '<br>';
+                        
+                        // 用段落替换列表
+                        list.parentNode.replaceChild(p, list);
+                        
+                        // 移动光标到新段落
+                        range.setStart(p, 0);
+                        range.setEnd(p, 0);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        
+                        return;
+                    } else if (isEmpty) {
+                        // 如果空但不是唯一项，移除当前项
+                        e.preventDefault();
+                        
+                        const nextItem = listItem.nextElementSibling;
+                        const prevItem = listItem.previousElementSibling;
+                        
+                        if (nextItem) {
+                            // 有下一项，删除当前项并将光标移到下一项开头
+                            list.removeChild(listItem);
+                            range.setStart(nextItem, 0);
+                            range.setEnd(nextItem, 0);
+                        } else if (prevItem) {
+                            // 有上一项，删除当前项并将光标移到上一项末尾
+                            list.removeChild(listItem);
+                            range.setStart(prevItem, prevItem.childNodes.length);
+                            range.setEnd(prevItem, prevItem.childNodes.length);
+                        }
+                        
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        return;
+                    }
+                } else if (e.key === 'Backspace' && range.startOffset === 0 && range.endOffset === 0) {
+                    // 处理退格键在列表项开头
+                    if (isEmpty && listItems.length === 1) {
+                        // 如果这是唯一的空列表项，移除整个列表
+                        e.preventDefault();
+                        
+                        // 创建一个新段落
+                        const p = document.createElement('div');
+                        p.innerHTML = '<br>';
+                        
+                        // 用段落替换列表
+                        list.parentNode.replaceChild(p, list);
+                        
+                        // 移动光标到新段落
+                        range.setStart(p, 0);
+                        range.setEnd(p, 0);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    } else if (isEmpty) {
+                        // 如果空但不是唯一项，移除当前项
+                        e.preventDefault();
+                        
+                        const prevItem = listItem.previousElementSibling;
+                        
+                        if (prevItem) {
+                            // 合并到上一项
+                            list.removeChild(listItem);
+                            range.setStart(prevItem, prevItem.childNodes.length);
+                            range.setEnd(prevItem, prevItem.childNodes.length);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 应用颜色
+        function applyColor() {
+            const colorInput = document.getElementById('customColorInput');
+            let color = colorInput.value.trim();
+            
+            if (!color) {
+                showNotification('请输入颜色代码', 'error');
+                return;
+            }
+            
+            // 规范化颜色代码
+            if (!color.startsWith('#')) {
+                color = '#' + color;
+            }
+            
+            // 验证颜色代码格式
+            const colorRegex = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+            if (!colorRegex.test(color)) {
+                showNotification('请输入有效的颜色代码（如#000000或#000）', 'error');
+                return;
+            }
+            
+            // 应用颜色
+            applyFormat('foreColor', color);
+            
+            // 关闭颜色选择器
+            document.getElementById('colorOptions').style.display = 'none';
+            colorInput.value = '';
+            
+            showNotification('颜色已应用', 'success');
+        }
+
+        // 插入文本到光标位置
+        function insertTextAtCursor(text) {
+            const editor = document.getElementById('clueEditor');
+            editor.focus();
+            
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                const textNode = document.createTextNode(text);
+                range.insertNode(textNode);
+                
+                // 移动光标到插入文本之后
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            } else {
+                // 如果没有选区，添加到末尾
+                editor.innerHTML += text;
+            }
+        }
+
+        // 关联线索功能
+        function associateClue() {
+            if (!currentClueId) {
+                showNotification('请先选择要关联的线索', 'error');
+                return;
+            }
+            
+            const select = document.getElementById('associateClueSelect');
+            select.innerHTML = '<option value="">选择线索...</option>';
+            
+            // 排除当前线索和已关联的线索
+            const currentClue = clues.find(c => c.id == currentClueId);
+            const alreadyAssociated = currentClue.related ? currentClue.related.map(r => r.id) : [];
+            
+            clues.forEach(clue => {
+                if (clue.id != currentClueId && !alreadyAssociated.includes(clue.id)) {
+                    const option = document.createElement('option');
+                    option.value = clue.id;
+                    option.textContent = clue.title;
+                    select.appendChild(option);
+                }
+            });
+            
+            document.getElementById('associateClueModal').style.display = 'flex';
+        }
+
+        // 添加关联
+        function addAssociation() {
+            const select = document.getElementById('associateClueSelect');
+            const noteInput = document.getElementById('relationNote');
+            
+            const clueId = parseInt(select.value);
+            const note = noteInput.value.trim();
+            
+            if (!clueId) {
+                showNotification('请选择要关联的线索', 'error');
+                return;
+            }
+            
+            const clueIndex = clues.findIndex(c => c.id == currentClueId);
+            if (clueIndex === -1) return;
+            
+            // 初始化related数组如果不存在
+            if (!clues[clueIndex].related) {
+                clues[clueIndex].related = [];
+            }
+            
+            // 检查是否已关联
+            if (clues[clueIndex].related.some(r => r.id === clueId)) {
+                showNotification('该线索已关联', 'error');
+                return;
+            }
+            
+            // 添加关联
+            clues[clueIndex].related.push({
+                id: clueId,
+                note: note
+            });
+            
+            // 更新本地存储
+            localStorage.setItem('trpgClues', JSON.stringify(clues));
+            
+            // 更新相关线索显示
+            updateRelatedClues(currentClueId);
+            
+            // 关闭模态框
+            document.getElementById('associateClueModal').style.display = 'none';
+            select.value = '';
+            noteInput.value = '';
+            
+            showNotification('关联已添加', 'success');
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add(type);
+            
+            // 显示通知
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // 自动隐藏通知
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 侧边栏控制
+        function showSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+        }
+
+        function hideSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        }
+
+        // 设备检测
+        const isMobile = () => window.innerWidth <= 768;
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 移动端菜单按钮
+            document.getElementById('mobileMenuBtn').addEventListener('click', showSidebar);
+            document.getElementById('mobileSidebarBtn').addEventListener('click', showSidebar);
+            document.getElementById('overlay').addEventListener('click', hideSidebar);
+            
+            // 新建线索按钮
+            document.getElementById('newClueBtn').addEventListener('click', () => {
+                document.getElementById('newClueModal').style.display = 'flex';
+            });
+            
+            document.getElementById('mobileNewClueBtn').addEventListener('click', () => {
+                document.getElementById('newClueModal').style.display = 'flex';
+            });
+            
+            // 关闭模态框
+            document.getElementById('closeNewClueModal').addEventListener('click', () => {
+                document.getElementById('newClueModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeAddLinkModal').addEventListener('click', () => {
+                document.getElementById('addLinkModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeAddTagModal').addEventListener('click', () => {
+                document.getElementById('addTagModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeAddImageModal').addEventListener('click', () => {
+                document.getElementById('addImageModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeThemeSelectorModal').addEventListener('click', () => {
+                document.getElementById('themeSelectorModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeExportImportModal').addEventListener('click', () => {
+                document.getElementById('exportImportModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeTimelineBtn').addEventListener('click', () => {
+                document.getElementById('timelineMainContainer').style.display = 'none';
+            });
+            
+            document.getElementById('closeAssociateClueModal').addEventListener('click', () => {
+                document.getElementById('associateClueModal').style.display = 'none';
+            });
+            
+            // 创建线索按钮
+            document.getElementById('createClueBtn').addEventListener('click', createNewClue);
+            
+            // 保存按钮
+            document.getElementById('saveClueBtn').addEventListener('click', saveClue);
+            document.getElementById('mobileSaveBtn').addEventListener('click', saveClue);
+            
+            // 删除按钮
+            document.getElementById('deleteClueBtn').addEventListener('click', deleteClue);
+            
+            // 关联按钮
+            document.getElementById('associateClueBtn').addEventListener('click', associateClue);
+            document.getElementById('addAssociationBtn').addEventListener('click', addAssociation);
+            
+            // 链接按钮
+            document.getElementById('addLinkBtn').addEventListener('click', addLink);
+            document.getElementById('mobileLinkBtn').addEventListener('click', addLink);
+            document.getElementById('insertLinkBtn').addEventListener('click', insertLink);
+            
+            // 标签按钮
+            document.getElementById('addTagBtn').addEventListener('click', addTag);
+            document.getElementById('insertTagBtn').addEventListener('click', insertTag);
+            
+            // 图片按钮
+            document.getElementById('addImageBtn').addEventListener('click', addImage);
+            document.getElementById('insertImageBtn').addEventListener('click', insertImage);
+            
+            // 编辑器工具栏按钮 - 使用重构后的功能
+            document.getElementById('boldBtn').addEventListener('click', () => applyFormat('bold'));
+            document.getElementById('italicBtn').addEventListener('click', () => applyFormat('italic'));
+            document.getElementById('underlineBtn').addEventListener('click', () => applyFormat('underline'));
+            document.getElementById('strikethroughBtn').addEventListener('click', () => applyFormat('strikethrough'));
+            
+            document.getElementById('listBulletBtn').addEventListener('click', () => applyFormat('insertUnorderedList'));
+            document.getElementById('listNumberBtn').addEventListener('click', () => applyFormat('insertOrderedList'));
+            
+            document.getElementById('heimuBtn').addEventListener('click', applyHeimu);
+            
+            // 颜色选择器
+            document.getElementById('colorBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const colorOptions = document.getElementById('colorOptions');
+                colorOptions.style.display = colorOptions.style.display === 'grid' ? 'none' : 'grid';
+            });
+            
+            document.getElementById('applyCustomColorBtn').addEventListener('click', applyColor);
+            
+            // 关闭颜色选择器当点击其他地方时
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.color-picker-container')) {
+                    document.getElementById('colorOptions').style.display = 'none';
+                }
+            });
+            
+            // 搜索功能
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchTerm = e.target.value;
+                loadClues();
+            });
+            
+            // 导出/导入按钮
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            document.getElementById('importBtn').addEventListener('click', importData);
+            
+            // 时间线按钮
+            document.getElementById('timelineBtn').addEventListener('click', showTimeline);
+            
+            // 复制导出数据按钮
+            document.getElementById('copyExportBtn').addEventListener('click', copyExportData);
+            
+            // 执行导入按钮
+            document.getElementById('performImportBtn').addEventListener('click', performImport);
+            
+            // 清空数据按钮
+            document.getElementById('clearDataBtn').addEventListener('click', clearData);
+            
+            // 主题选择器
+            document.getElementById('themeSelectorBtn').addEventListener('click', showThemeSelector);
+            
+            // 时间线选项卡切换
+            document.getElementById('timelineEditTab').addEventListener('click', () => switchTimelineTab('edit'));
+            document.getElementById('timelineViewTab').addEventListener('click', () => switchTimelineTab('view'));
+            
+            // 时间线编辑控制按钮
+            document.getElementById('addToTimelineBtn').addEventListener('click', addSelectedCluesToTimeline);
+            document.getElementById('saveTimelineBtn').addEventListener('click', saveTimelineScheme);
+            document.getElementById('clearTimelineBtn').addEventListener('click', clearTimeline);
+            
+            // 时间线快速添加按钮
+            document.getElementById('selectAllCluesBtn').addEventListener('click', function() {
+                const select = document.getElementById('timelineClueSelect');
+                for (let i = 0; i < select.options.length; i++) {
+                    select.options[i].selected = true;
+                }
+            });
+            
+            document.getElementById('deselectAllCluesBtn').addEventListener('click', function() {
+                const select = document.getElementById('timelineClueSelect');
+                for (let i = 0; i < select.options.length; i++) {
+                    select.options[i].selected = false;
+                }
+            });
+            
+            document.getElementById('addRecentCluesBtn').addEventListener('click', function() {
+                const select = document.getElementById('timelineClueSelect');
+                // 先取消所有选择
+                for (let i = 0; i < select.options.length; i++) {
+                    select.options[i].selected = false;
+                }
+                // 选择前5个（最新的）
+                const count = Math.min(5, select.options.length);
+                for (let i = 0; i < count; i++) {
+                    select.options[i].selected = true;
+                }
+            });
+            
+            // 时间线方案控制按钮
+            document.getElementById('loadTimelineSchemeBtn').addEventListener('click', loadTimelineScheme);
+            document.getElementById('applyTimelineBtn').addEventListener('click', applyTimelineSchemeToClues);
+            document.getElementById('deleteTimelineSchemeBtn').addEventListener('click', deleteTimelineScheme);
+            document.getElementById('switchToEditBtn').addEventListener('click', () => switchTimelineTab('edit'));
+            
+            // 编辑器键盘事件 - 修复列表功能
+            document.getElementById('clueEditor').addEventListener('keydown', handleListKeydown);
+            
+            // 响应窗口大小变化
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    hideSidebar();
+                }
+            });
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + S 保存
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveClue();
+                }
+                
+                // Ctrl/Cmd + N 新建线索
+                if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                    e.preventDefault();
+                    document.getElementById('newClueModal').style.display = 'flex';
+                }
+                
+                // Ctrl/Cmd + F 搜索
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                
+                // Esc 关闭模态框和侧边栏
+                if (e.key === 'Escape') {
+                    const modals = document.querySelectorAll('.modal, .timeline-main-container');
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'flex' || modal.style.display === 'block') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                    
+                    hideSidebar();
+                    
+                    // 关闭颜色选择器
+                    document.getElementById('colorOptions').style.display = 'none';
+                }
+            });
+        }
+
+        // 工具函数
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            if (diffMins < 60) {
+                return `${diffMins}分钟前`;
+            } else if (diffHours < 24) {
+                return `${diffHours}小时前`;
+            } else if (diffDays < 7) {
+                return `${diffDays}天前`;
+            } else {
+                return `${date.getMonth()+1}/${date.getDate()}`;
+            }
+        }
+    </script>
+</body>
+</html>
