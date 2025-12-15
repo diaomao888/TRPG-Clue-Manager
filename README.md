@@ -1,0 +1,1 @@
+# TRPG-Clue-Manager
