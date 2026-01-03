@@ -2183,8 +2183,12 @@
             // 处理内容，将markdown图片和链接转换为HTML
             let content = clue.content;
             
-            // 将换行符转换为br
+            // 处理换行符，确保段落分隔
+            content = content.replace(/\n\n/g, '</div><div>');
             content = content.replace(/\n/g, '<br>');
+            
+            // 包装在div中
+            content = '<div>' + content + '</div>';
             
             // 将图片标记转换为img元素
             content = content.replace(/!\[(.*?)\]\((.*?)\)/g, function(match, alt, src) {
@@ -2226,6 +2230,19 @@
             // 处理粗体和斜体
             content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // 处理列表
+            content = content.replace(/^- (.*?)(?=\n|$)/gm, '<li>$1</li>');
+            content = content.replace(/^(\d+)\. (.*?)(?=\n|$)/gm, '<li>$2</li>');
+            
+            // 将连续li转换为ul/ol
+            content = content.replace(/(<li>.*?<\/li>)+/g, function(match) {
+                if (match.includes('<li>1.')) {
+                    return '<ol>' + match + '</ol>';
+                } else {
+                    return '<ul>' + match + '</ul>';
+                }
+            });
             
             editor.innerHTML = content;
             
@@ -2355,7 +2372,7 @@
             });
         }
 
-        // 保存线索
+        // 保存线索 - 修复段落保存问题
         function saveClue() {
             if (!currentClueId) {
                 showNotification('请先选择或创建线索', 'error');
@@ -2369,6 +2386,10 @@
             
             // 获取内容
             let content = editor.innerHTML;
+            
+            // 移除所有div标签，但保留内容
+            content = content.replace(/<div>/gi, '');
+            content = content.replace(/<\/div>/gi, '\n');
             
             // 恢复原始markdown格式
             // 1. 恢复图片
@@ -2423,20 +2444,34 @@
             });
             
             // 7. 处理粗体和斜体
-            content = content.replace(/<strong>/g, '**').replace(/<\/strong>/g, '**');
-            content = content.replace(/<b>/g, '**').replace(/<\/b>/g, '**');
-            content = content.replace(/<em>/g, '*').replace(/<\/em>/g, '*');
-            content = content.replace(/<i>/g, '*').replace(/<\/i>/g, '*');
+            content = content.replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
+            content = content.replace(/<b>(.*?)<\/b>/gi, '**$1**');
+            content = content.replace(/<em>(.*?)<\/em>/gi, '*$1*');
+            content = content.replace(/<i>(.*?)<\/i>/gi, '*$1*');
             
-            // 8. 清理剩余的HTML标签和样式
-            content = content.replace(/<u>/g, '[下划线:').replace(/<\/u>/g, ']');
-            content = content.replace(/<s>/g, '[删除线:').replace(/<\/s>/g, ']');
-            content = content.replace(/<br>/g, '\n');
-            content = content.replace(/<div>/g, '\n').replace(/<\/div>/g, '');
-            content = content.replace(/<span>/g, '').replace(/<\/span>/g, '');
-            content = content.replace(/<ul>/g, '\n').replace(/<\/ul>/g, '\n');
-            content = content.replace(/<ol>/g, '\n').replace(/<\/ol>/g, '\n');
-            content = content.replace(/<li>/g, '* ').replace(/<\/li>/g, '\n');
+            // 8. 处理列表
+            content = content.replace(/<ul>(.*?)<\/ul>/gis, function(match, listContent) {
+                // 移除li标签，替换为列表项
+                const items = listContent.replace(/<li>(.*?)<\/li>/gi, '- $1\n');
+                return items.trim() + '\n\n';
+            });
+            
+            content = content.replace(/<ol>(.*?)<\/ol>/gis, function(match, listContent) {
+                let counter = 1;
+                const items = listContent.replace(/<li>(.*?)<\/li>/gi, function(itemMatch, itemText) {
+                    return `${counter++}. ${itemText}\n`;
+                });
+                return items.trim() + '\n\n';
+            });
+            
+            // 9. 清理剩余的HTML标签和样式
+            content = content.replace(/<p>/gi, '').replace(/<\/p>/gi, '\n\n');
+            content = content.replace(/<br>/gi, '\n');
+            content = content.replace(/<span>/gi, '').replace(/<\/span>/gi, '');
+            
+            // 10. 清理多余的换行符
+            content = content.replace(/\n{3,}/g, '\n\n');
+            content = content.trim();
             
             // 提取图片链接
             const imageRegex = /!\[.*?\]\((.*?)\)/g;
